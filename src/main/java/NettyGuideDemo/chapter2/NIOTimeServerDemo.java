@@ -1,4 +1,4 @@
-package NettyGuideDemo;
+package NettyGuideDemo.chapter2;
 
 
 import java.io.IOException;
