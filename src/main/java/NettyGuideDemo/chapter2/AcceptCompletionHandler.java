@@ -1,4 +1,4 @@
-package NettyGuideDemo.chapter2;
+package NettyGuideDemo.chapter2.chapter2;
 
 import java.nio.ByteBuffer;
 import java.nio.channels.AsynchronousSocketChannel;

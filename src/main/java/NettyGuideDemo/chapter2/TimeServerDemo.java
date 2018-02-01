@@ -1,4 +1,4 @@
-package NettyGuideDemo.chapter2;
+package NettyGuideDemo.chapter2.chapter2;
 
 import org.junit.Test;
 
