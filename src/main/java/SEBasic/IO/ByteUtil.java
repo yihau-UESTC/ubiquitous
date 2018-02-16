@@ -105,7 +105,7 @@ public class ByteUtil {
     public void test(){
         short s = 3;
         char c = 'a';
-        int i = 333;
+        int i = 123;
         long l = 12222222;
         float f = 2.33f;
         double d = 122.33;
