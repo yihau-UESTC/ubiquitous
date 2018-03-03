@@ -32,9 +32,9 @@ public class EchoServer {
 
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-                            socketChannel.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(65535, 0, 2, 0, 2));
+//                            socketChannel.pipeline().addLast("frameDecoder", new LengthFieldBasedFrameDecoder(65535, 0, 2, 0, 2));
                             socketChannel.pipeline().addLast("msgpack decoder", new MsgpackDecoder());
-                            socketChannel.pipeline().addLast("frameEncoder", new LengthFieldPrepender(2));
+//                            socketChannel.pipeline().addLast("frameEncoder", new LengthFieldPrepender(2));
                             socketChannel.pipeline().addLast("msgpack encoder", new MsgpackEncoder());
                             socketChannel.pipeline().addLast(new EchoServerHandler());
                         }
@@ -53,6 +53,7 @@ public class EchoServer {
 
         @Override
         public void channelRead(ChannelHandlerContext ctx, Object msg) throws Exception {
+            List<Object> list = (List<Object>) msg;
             System.out.println("Server receive the msgpack message : " + msg);
             ctx.writeAndFlush(msg);
         }

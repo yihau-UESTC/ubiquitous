@@ -1,4 +1,4 @@
-package NettyGuideDemo.chapter2.chapter2;
+package NettyGuideDemo.chapter2;
 
 public class AIOTimeClientDemo {
     public static void main(String[] args) {

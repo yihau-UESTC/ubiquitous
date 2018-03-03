@@ -1,4 +1,4 @@
-package NettyGuideDemo.chapter2.chapter2;
+package NettyGuideDemo.chapter2;
 
 
 import java.io.IOException;
@@ -47,7 +47,7 @@ public class NIOTimeServerDemo {
         public void run() {
             while (!stop){
                 try {
-                    selector.select(1000);//设置每过1s轮询一次，没有参数的select是阻塞到有事件发生。
+                    selector.select(1000);//设置阻塞1s
                     Set<SelectionKey> selectionKeys = selector.selectedKeys();
                     Iterator<SelectionKey> iterator = selectionKeys.iterator();
                     SelectionKey key = null;

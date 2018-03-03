@@ -1,4 +1,4 @@
-package NettyGuideDemo.chapter2.chapter2;
+package NettyGuideDemo.chapter2;
 
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
