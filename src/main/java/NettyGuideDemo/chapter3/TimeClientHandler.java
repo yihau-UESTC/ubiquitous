@@ -1,6 +1,7 @@
 package NettyGuideDemo.chapter3;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.buffer.Unpooled;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.ChannelInboundHandlerAdapter;
@@ -13,6 +14,7 @@ public class TimeClientHandler extends ChannelInboundHandlerAdapter {
 
     public TimeClientHandler() {
         byte[] req = "QUERY TIME ORDER".getBytes();
+
         firstMessage = Unpooled.buffer(req.length);
         firstMessage.writeBytes(req);
     }

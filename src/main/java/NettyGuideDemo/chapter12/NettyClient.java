@@ -1,6 +1,7 @@
 package NettyGuideDemo.chapter12;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.PooledByteBufAllocator;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
@@ -36,8 +37,6 @@ public class NettyClient {
                     .handler(new ChannelInitializer<SocketChannel>() {
                         @Override
                         protected void initChannel(SocketChannel socketChannel) throws Exception {
-//                            socketChannel.pipeline().addLast(new ObjectDecoder(1024*1024, ClassResolvers.cacheDisabled(this.getClass().getClassLoader())));
-//                            socketChannel.pipeline().addLast(new ObjectEncoder());
                             socketChannel.pipeline().addLast(new LoggingHandler(LogLevel.INFO));
                             socketChannel.pipeline().addLast(new NettyMessageDecoder(1024*1024, 4, 4));
                             socketChannel.pipeline().addLast("MessageEncoder", new NettyMessageEncoder());
