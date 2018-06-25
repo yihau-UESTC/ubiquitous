@@ -7,6 +7,7 @@ import java.util.Queue;
 
 /**
  * 图的实现类使用的是邻接矩阵的存储形式，也可以使用邻接表
+ * 无向带权图
  * @param <T> 节点类
  */
 public class Graphmtx<T> implements Graph{
@@ -234,5 +235,33 @@ public class Graphmtx<T> implements Graph{
                 w = getVerticesPos(getNextNeighbor(verticesList.get(current), verticesList.get(w)));
             }
         }
+    }
+
+    public static void main(String[] args) {
+        Graphmtx<Character> graph = new Graphmtx<Character>(9);
+        graph.insertVertex('A');
+        graph.insertVertex('B');
+        graph.insertVertex('C');
+        graph.insertVertex('D');
+        graph.insertVertex('E');
+        graph.insertVertex('F');
+        graph.insertVertex('G');
+        graph.insertVertex('H');
+        graph.insertVertex('I');
+        graph.insertEdge('A', 'B', 1);
+        graph.insertEdge('B', 'E', 1);
+        graph.insertEdge('A', 'C', 1);
+        graph.insertEdge('A', 'D', 1);
+        graph.insertEdge('B', 'C', 1);
+        graph.insertEdge('E', 'G', 1);
+        graph.insertEdge('D', 'F', 1);
+        graph.insertEdge('C', 'F', 1);
+        graph.insertEdge('F', 'H', 1);
+        graph.insertEdge('I', 'H', 1);
+        System.out.println("graph construct finish!!!");
+        System.out.println("graph DFS");
+        graph.DFS('A');
+        System.out.println("graph BFS");
+        graph.BFS('A');
     }
 }

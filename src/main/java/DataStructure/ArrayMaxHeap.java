@@ -71,6 +71,7 @@ public class ArrayMaxHeap <T extends Comparable<? super T>> implements MaxHeapIn
         size ++;
         if (size > heap.length)doubleArray();
         heap[size - 1] = newEntry;
+        //
         int j = size - 1, i = (j - 1) / 2;
         while (j > 0){
             if (heap[i].compareTo(newEntry) > 0)break;
@@ -154,7 +155,7 @@ public class ArrayMaxHeap <T extends Comparable<? super T>> implements MaxHeapIn
     public static void main(String[] args) {
         Integer[] a = {1,3,5,7,2,4,8,9};
         ArrayMaxHeap<Integer> heap = new ArrayMaxHeap<>(a);
-        System.out.println(heap);
+        heap.display();
         heap.add(15);
         heap.display();
         Integer i = heap.removeMax();

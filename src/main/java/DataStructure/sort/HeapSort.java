@@ -12,6 +12,8 @@ public class HeapSort {
     public static void main(String[] args){
         int[] h = {3,1,5,7,2,4,9,6,10,8};
         sort(h, 10);
+        int n = -2 / 2;
+        System.out.println("77777" + n);
     }
 
     public static void sort(int[] h, int length){

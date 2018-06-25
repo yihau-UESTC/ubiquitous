@@ -2,12 +2,13 @@ package SEBasic;
 
 import javax.jws.soap.SOAPBinding;
 import java.io.Serializable;
+import java.lang.reflect.Method;
 import java.lang.reflect.Type;
 import java.util.*;
 
 public class GenericImpl<T> implements GenericInterface<T>{
     @Override
-    public void getRealT() {
+    public void getRealT() throws NoSuchMethodException {
         System.out.println(this.getClass().getInterfaces().toString());
         System.out.println(this.getClass().getGenericInterfaces());
         Type[] types = this.getClass().getGenericInterfaces();

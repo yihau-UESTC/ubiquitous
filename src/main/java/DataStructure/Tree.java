@@ -112,14 +112,15 @@ public class Tree<T> {
         else if (node1 == null) return false;
         else if (node2 == null) return false;
         else{
-            boolean f1 = node1.getValue().equals(node2.getValue());
-            boolean f2 = isEqual(node1.getLeft(),node2.getLeft());
-            boolean f3 = isEqual(node1.getRight(),node2.getRight());
-            if(f1 && f2 && f3)return true;
+            if (node1.getValue().equals(node2.getValue())//如果根不等的话直接返回，不需要在判断后面两个&&表达式了。
+                    && isEqual(node1.getLeft(), node2.getLeft())
+                    && isEqual(node1.getRight(), node2.getRight()))
+                return true;
             else return false;
         }
     }
-    //二叉树前序遍历的应用，根节点为空的时候返回，输出根节点的值相当于对根节点的操作，后面依次是遍历左子树，遍历右子树。
+
+    //二叉树前序遍历的应用，打印二叉树，根节点为空的时候返回，输出根节点的值相当于对根节点的操作，后面依次是遍历左子树，遍历右子树。
     public void displayTree(Node<T> root){
         if (root == null)return;
         else {
@@ -132,11 +133,11 @@ public class Tree<T> {
         }
     }
 
+    //二叉树前序遍历寻找节点
     public Node<T> find(Node<T> node, String a){
         if (node == null) return null;
         else {
-            boolean f = node.getValue().equals(a);
-            if (f)return node;
+            if (node.getValue().equals(a)) return node;
             Node<T> node1 =  find(node.getLeft(),a);
             Node<T> node2 =  find(node.getRight(),a);
             return node1 == null && node2 == null ? null : node1 == null ? node2 : node1;
@@ -163,6 +164,7 @@ public class Tree<T> {
         }
     }
 
+    //后序遍历将一个二叉树置空
     public Node<T> destory(Node<T> root){
         if (root == null) return root;
         else{
@@ -218,7 +220,7 @@ public class Tree<T> {
     }
 
 
-    //先序遍历（非递归）
+    //先序遍历（非递归），//右节点入栈，访问左节点。
     public void nrPreOrderTraverse() {
 
         Stack<Node<T>> stack = new Stack<Node<T>>();
@@ -312,7 +314,6 @@ public class Tree<T> {
 
     }
 
-
     //根据二叉树的前序和中序序列来构建二叉树。
     public static Node<String> createBinaryTreeFromPreAndInOrder(String[] preOrder, String[] inOrder, int length){
         if (length == 0) return null;//序列为空时，到达叶子节点，返回null，递归的终止条件
@@ -327,7 +328,6 @@ public class Tree<T> {
         n.setRight(createBinaryTreeFromPreAndInOrder(rightPreOrder, rightInOrder, length - k - 1));//递归创建右子树
         return n;//返回当前创建的节点
     }
-
 
     public static void main(String[] args){
         Tree<Integer> tree = new Tree<Integer>();
@@ -367,7 +367,4 @@ public class Tree<T> {
         Tree<String> tree3 = new Tree<>(node3);
         tree3.displayTree(tree3.root);
     }
-
-
-
 }

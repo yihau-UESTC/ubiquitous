@@ -9,6 +9,8 @@ public class Join {
 
     thread1.start();
     thread.start();
+        Thread.sleep(1000);
+        System.out.println("即将进入同步区");
         synchronized (Thread.currentThread()){
             Thread.sleep(1000);
         }

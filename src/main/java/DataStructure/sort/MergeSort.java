@@ -1,5 +1,7 @@
 package DataStructure.sort;
 
+import org.junit.Test;
+
 import java.util.Arrays;
 
 /**
@@ -13,6 +15,7 @@ public class MergeSort {
         int[] a = {3,1,6,5};
         sort(a,0,a.length-1);
         System.out.println(Arrays.toString(a));
+        Arrays.sort(a);
     }
 
     public static void sort(int[] a, int left, int right){
@@ -42,5 +45,38 @@ public class MergeSort {
         for (int i = 0; i < result.length; i++){
             a[left + i] = result[i];
         }
+    }
+
+
+    public int[] mergeSort(int[] arr, int low, int high) {
+        if (low < high) {
+            int mid = (low + high) / 2;
+            mergeSort(arr, low, mid);
+            mergeSort(arr, mid + 1, high);
+            merge1(arr, low, mid, high);
+        }
+        return arr;
+    }
+
+    private void merge1(int[] arr, int low, int mid, int high) {
+        int[] seq = new int[high - low + 1];
+        int i1 = low, i2 = mid + 1, c = 0;
+        while (i1 <= mid && i2 <= high) {
+            if (arr[i1] < arr[i2]) seq[c++] = arr[i1++];
+            else seq[c++] = arr[i2++];
+        }
+
+        while (i1 <= mid) seq[c++] = arr[i1++];
+        while (i2 <= high) seq[c++] = arr[i2++];
+
+        for (int i = 0; i < seq.length; i++) {
+            arr[low + i] = seq[i];
+        }
+    }
+
+    @Test
+    public void run() {
+        int[] a = {10, 3, 1, 6, 5};
+        System.out.println(Arrays.toString(new MergeSort().mergeSort(a, 0, 4)));
     }
 }

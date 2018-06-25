@@ -50,7 +50,7 @@ public class WaitNotify {
                         e.printStackTrace();
                     }
                 }
-                System.out.println(Thread.currentThread() + " flag is true. running @ " +
+                System.out.println(Thread.currentThread() + " flag is " + flag + ". running @ " +
                 new SimpleDateFormat("HH:mm:ss").format(new Date()));
             }
         }
@@ -71,6 +71,7 @@ public class WaitNotify {
                     e.printStackTrace();
                 }
             }
+
 
             synchronized (lock){
                 System.out.println(Thread.currentThread() + " hold lock again. sleep@ " +

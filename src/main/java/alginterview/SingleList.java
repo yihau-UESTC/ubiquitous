@@ -1,4 +1,4 @@
-package DataStructure;
+package alginterview;
 
 import org.junit.Test;
 

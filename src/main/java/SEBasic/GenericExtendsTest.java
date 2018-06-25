@@ -16,6 +16,7 @@ public class GenericExtendsTest {
 //        managerPair.setFirst(new CEO());
 //        managerPair.setFirst(new Employee());
 //        Calendar
+
         System.out.println(System.getProperty("line.separator"));
     }
 
