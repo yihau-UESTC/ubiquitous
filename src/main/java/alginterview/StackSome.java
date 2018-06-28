@@ -823,4 +823,84 @@ public class StackSome {
         }
         solution.remove(solution.size() - 1);
     }
+
+    class NumPair {
+        int num;
+        int fre;
+
+        public NumPair(int num, int fre) {
+            this.num = num;
+            this.fre = fre;
+        }
+    }
+
+    public List<Integer> topKFrequent(int[] nums, int k) {
+        List<Integer> res = new ArrayList<>();
+        Map<Integer, Integer> map = new HashMap<>();
+        for (int i : nums) {
+            Integer orDefault = map.getOrDefault(i, 0);
+            map.put(i, orDefault + 1);
+        }
+
+        PriorityQueue<Map.Entry<Integer, Integer>> queue = new PriorityQueue<>(k, new Comparator<Map.Entry<Integer, Integer>>() {
+            @Override
+            public int compare(Map.Entry<Integer, Integer> o1, Map.Entry<Integer, Integer> o2) {
+                return o1.getValue() - o2.getValue();
+            }
+        });
+        for (Map.Entry<Integer, Integer> entry : map.entrySet()) {
+            if (queue.size() < k) queue.add(entry);
+            else {
+                Map.Entry<Integer, Integer> peek = queue.peek();
+                if (peek.getValue() < entry.getValue()) {
+                    queue.poll();
+                    queue.add(entry);
+                }
+            }
+        }
+        while (!queue.isEmpty()) {
+            res.add(queue.poll().getKey());
+        }
+        return res;
+    }
+
+    public class ListNode {
+        int val;
+        ListNode next;
+
+        ListNode(int x) {
+            val = x;
+        }
+    }
+
+    public ListNode mergeKLists(ListNode[] lists) {
+        ListNode dummy = new ListNode(-1);
+        PriorityQueue<ListNode> queue = new PriorityQueue<>(new Comparator<ListNode>() {
+            @Override
+            public int compare(ListNode o1, ListNode o2) {
+                return o1.val - o2.val;
+            }
+        });
+
+        for (int i = 0; i < lists.length; i++) {
+            if (lists[i] != null) {
+                queue.add(lists[i]);
+            }
+        }
+        ListNode cur = dummy;
+        while (!queue.isEmpty()) {
+            ListNode temp = queue.poll();
+            cur.next = temp;
+            cur = cur.next;
+            if (temp.next != null) queue.add(temp.next);
+        }
+        return dummy.next;
+    }
+
+
+    @Test
+    public void run10() {
+
+
+    }
 }
