@@ -525,5 +525,33 @@ public class Tree {
         System.out.println(treeNode);
     }
 
+    public TreeNode sortedArrayToBST(int[] nums) {
+        if (nums.length == 0)return null;
+        int n = nums.length;
+        return split(nums, 0, n - 1);
+    }
+
+    private TreeNode split(int[] nums, int low, int high){
+        if (low < high){
+            int mid = (low + high) / 2;
+            TreeNode cur = new TreeNode(nums[mid]);
+            cur.left = split(nums, low, mid - 1);
+            cur.right = split(nums, mid + 1, high);
+            return cur;
+        }else if (low == high){
+            return new TreeNode(nums[low]);//LOW == HIGH
+        }else {
+            return null;
+        }
+
+    }
+
+    @Test
+    public void run10(){
+        int[] arr = {-10,-3,0,5,9};
+        TreeNode node = sortedArrayToBST(arr);
+        System.out.println(node);
+    }
+
 
 }

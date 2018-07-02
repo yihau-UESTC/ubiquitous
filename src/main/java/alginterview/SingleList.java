@@ -1,7 +1,6 @@
 package alginterview;
 
 import org.junit.Test;
-import scala.tools.nsc.symtab.classfile.ICodeReader;
 
 import java.util.List;
 import java.util.Stack;
