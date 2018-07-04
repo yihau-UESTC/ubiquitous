@@ -1,7 +1,7 @@
 package alginterview;
 
 import org.junit.Test;
-import org.w3c.dom.ls.LSInput;
+import scala.tools.nsc.backend.icode.Members;
 
 import java.util.*;
 
@@ -554,4 +554,627 @@ public class Tree {
     }
 
 
+    public int kthSmallest(TreeNode root, int k) {
+        TreeNode node = root;
+        Stack<TreeNode> stack = new Stack<>();
+        while (node != null || !stack.empty()) {
+            while (node != null) {
+                stack.push(node);
+                node = node.left;
+            }
+            if (!stack.empty()) {
+                TreeNode pop = stack.pop();
+                k--;
+                if (k <= 0) return pop.val;
+                node = pop.right;
+            }
+        }
+        throw new IllegalArgumentException();
+    }
+
+    private TreeNode par;
+    private boolean pf;
+    private boolean qf;
+
+
+    public TreeNode lowestCommonAncestor2(TreeNode root, TreeNode p, TreeNode q) {
+        //递归终止条件
+        if (root == null || root.val == p.val || root.val == q.val) return root;
+        //在左子树中搜索p和q
+        TreeNode left = lowestCommonAncestor2(root.left, p, q);
+        //在右子树中搜索p和q
+        TreeNode right = lowestCommonAncestor2(root.right, p, q);
+        if (left == null && right == null) return null;
+        if (left == null) return right;
+        if (right == null) return left;
+        return root;
+    }
+
+    public int getMinimumDifference(TreeNode root) {
+        Stack<TreeNode> stack = new Stack<>();
+        TreeNode last = null;
+        int min = Integer.MAX_VALUE;
+        TreeNode node = root;
+        while (node != null || !stack.empty()) {
+            while (node != null) {
+                stack.push(node);
+                node = node.left;
+            }
+            if (!stack.empty()) {
+                TreeNode pop = stack.pop();
+                if (last != null) {
+                    min = Math.min(pop.val - last.val, min);
+                }
+                last = pop;
+                node = pop.right;
+            }
+        }
+        return min;
+    }
+
+    private int min = Integer.MAX_VALUE;
+    private TreeNode pre = null;
+
+    public int getMinimumDifferenceByRe(TreeNode root) {
+        int min = Integer.MAX_VALUE;
+        if (root == null) return min;
+        int lmin = getMinimumDifferenceByRe(root.left);
+        if (pre != null) {
+            min = Math.min(lmin, root.val - pre.val);
+        }
+        pre = root;
+        int rmin = getMinimumDifferenceByRe(root.right);
+        return Math.min(min, rmin);
+    }
+
+    @Test
+    public void run11() {
+        TreeNode t1 = new TreeNode(5);
+        TreeNode t2 = new TreeNode(4);
+        TreeNode t3 = new TreeNode(7);
+        t1.left = t2;
+        t1.right = t3;
+        int i = getMinimumDifferenceByRe(t1);
+        System.out.println(i);
+    }
+
+    private List<String> res = new ArrayList<>();
+    private String[] lettersMap = {"abc", "def", "ghi", "jkl", "mno", "pqrs", "tuv", "wxyz"};
+
+    public List<String> letterCombinations(String digits) {
+        if (digits == null || digits == "") return res;
+        find(digits, 0, "");
+        return res;
+    }
+
+    private void find(String digits, int index, String cur) {
+        if (index == digits.length()) {
+            res.add(cur);
+            return;
+        }
+        char c = digits.charAt(index);
+        String letter = lettersMap[c - '2'];
+        for (int i = 0; i < letter.length(); i++) {
+            find(digits, index + 1, cur + letter.charAt(i));
+        }
+    }
+
+    @Test
+    public void run12() {
+        List<String> list = letterCombinations("");
+        System.out.println(list.toString());
+    }
+
+    private List<String> ipres = new ArrayList<>();
+
+    public List<String> restoreIpAddresses(String s) {
+        if (s == null || s.equals("")) return ipres;
+        findIp(s, 0, 0, "");
+        return ipres;
+    }
+
+    private void findIp(String s, int index, int level, String cur) {
+        if (level == 4) {
+            if (index == s.length()) {
+                ipres.add(cur.substring(0, cur.length() - 1));
+            }
+            return;
+        }
+        for (int i = 1; i < 4; i++) {
+            if (index + i <= s.length()) {
+                String temp = s.substring(index, index + i);
+                if (temp.equals("0") || temp.charAt(0) != '0') {
+                    int num = Integer.valueOf(temp);
+                    if (num < 256 && num > -1) {
+                        findIp(s, index + i, level + 1, cur + temp + ".");
+                    }
+                }
+            }
+        }
+    }
+
+    @Test
+    public void run13() {
+        List<String> list = restoreIpAddresses("010010");
+        System.out.println(ipres.toString());
+    }
+
+    private List<List<String>> palindromRes = new ArrayList<>();
+
+    public List<List<String>> partition(String s) {
+        findPalindrome(s, 0, new ArrayList<>());
+        return palindromRes;
+    }
+
+    private void findPalindrome(String s, int index, List<String> list) {
+        if (index == s.length()) {
+            palindromRes.add(new ArrayList<>(list));
+            return;
+        }
+        for (int i = 1; i <= s.length() - index; i++) {
+            String cur = s.substring(index, index + i);
+            if (isPalindrome(cur)) {
+                list.add(cur);
+                findPalindrome(s, index + i, list);
+                //当前选择的cur的所有可能性已经遍历结束，需要删掉。不能放在if的外面，可能有时候并没有添加所以不需要删除
+//                 而且也不需要判断remove的时候list的size，因为上面刚刚add一个。
+                list.remove(list.size() - 1);
+            }
+        }
+    }
+
+    private boolean isPalindrome(String str) {
+        char[] chars = str.toCharArray();
+        int l = 0, r = chars.length - 1;
+        while (l < r) {
+            if (chars[l] != chars[r]) return false;
+            l++;
+            r--;
+        }
+        return true;
+    }
+
+    @Test
+    public void run14() {
+        List<List<String>> aab = partition("abbab");
+        System.out.println(aab.toString());
+    }
+
+    private List<List<Integer>> permuteRes = new ArrayList<>();
+    private boolean[] used;
+
+    public List<List<Integer>> permute(int[] nums) {
+        if (nums.length == 0) return permuteRes;
+        used = new boolean[nums.length];
+        findPermute(nums, 0, new ArrayList<>());
+        return permuteRes;
+    }
+
+    private void findPermute(int[] nums, int index, List<Integer> list) {
+        if (index == nums.length) {
+            permuteRes.add(new ArrayList<>(list));
+            return;
+        }
+        for (int i = 0; i < nums.length; i++) {
+            //这里只有list中未使用过的nums才可以添加，使用一个used辅助数组来标志某个nums是否已经使用过。
+            if (!used[i]) {
+                list.add(nums[i]);
+                used[i] = true;
+                findPermute(nums, index + 1, list);
+                //要注意，当前的遍历完后需要恢复之前的状态。
+                list.remove(list.size() - 1);
+                used[i] = false;
+            }
+        }
+    }
+
+    private List<List<Integer>> permuteRes2 = new ArrayList<>();
+    private boolean[] used2;
+
+    public List<List<Integer>> permute2(int[] nums) {
+        if (nums.length == 0) return permuteRes2;
+        used2 = new boolean[nums.length];
+        Arrays.sort(nums);
+        findPermute2(nums, 0, new ArrayList<>());
+        return permuteRes2;
+    }
+
+    private void findPermute2(int[] nums, int index, List<Integer> list) {
+        if (index == nums.length) {
+            permuteRes2.add(new ArrayList<>(list));
+            return;
+        }
+        int pre = Integer.MAX_VALUE;
+        for (int i = 0; i < nums.length; i++) {
+            //前提是我对数组进行了排序
+            //要在广度上禁止重复元素，但是深度上不用，所以这里设置一个局部变量pre表示上一个遍历的元素
+            //在i+1之后如果发现当前nums和pre相同则跳过，pre的赋值在当前可能性遍历完之后执行。
+            //这里不能是if(!used2[i] && (i == 0 || nums[i] != nums[i - 1])),这样会在深度上也排除掉某些元素
+            if (!used2[i] && (i == 0 || nums[i] != pre)) {
+                list.add(nums[i]);
+                used2[i] = true;
+                findPermute2(nums, index + 1, list);
+                //要注意，当前的遍历完后需要恢复之前的状态。
+                list.remove(list.size() - 1);
+                used2[i] = false;
+                pre = nums[i];
+            }
+        }
+    }
+
+    @Test
+    public void run15() {
+        int[] nums = {1, 1, 2};
+        List<List<Integer>> lists = permute2(nums);
+        System.out.println(lists.toString());
+    }
+
+    private List<List<Integer>> combineRes;
+
+    public List<List<Integer>> combine(int n, int k) {
+        findCombine(n, k, 1, new ArrayList<>());
+        return combineRes;
+    }
+
+    //组合问题优化，剪枝！！！
+    private void findCombine(int n, int k, int start, List<Integer> list) {
+        if (list.size() == k) {
+            combineRes.add(new ArrayList<>(list));
+            return;
+        }
+//        for (int i = start; i <= n; i++){遍历到某个i的时候可能剩下的元素根本不够组成一个list，所以可以提前结束
+        for (int i = start; i <= n - (k - list.size()) + 1; i++) {
+            list.add(i);
+            findCombine(n, k, i + 1, list);
+            list.remove(list.size() - 1);
+        }
+    }
+
+    private List<List<Integer>> res39 = new ArrayList<>();
+
+    public List<List<Integer>> combinationSum(int[] candidates, int target) {
+        findCombinationSum(candidates, 0, target, new ArrayList<>());
+        return res39;
+    }
+
+    private void findCombinationSum(int[] candidates, int start, int remaining, List<Integer> list) {
+        if (remaining == 0) {
+            System.out.println("result : " + list.toString());
+            Arrays.sort(candidates);
+            res39.add(new ArrayList<>(list));
+            return;
+        }
+        for (int i = start; i < candidates.length; i++) {
+            remaining -= candidates[i];
+            if (remaining < 0) continue;
+            list.add(candidates[i]);
+            System.out.println("add : " + candidates[i]);
+            findCombinationSum(candidates, i, remaining, list);
+            System.out.println("remove : " + list.get(list.size() - 1));
+            remaining += candidates[i];
+            list.remove(list.size() - 1);
+        }
+    }
+
+    @Test
+    public void run16() {
+        int[] arr = {2, 3, 6, 7};
+        List<List<Integer>> lists = combinationSum(arr, 7);
+        System.out.println(lists.toString());
+    }
+
+    private List<List<Integer>> res40 = new ArrayList<>();
+
+    public List<List<Integer>> combinationSum2(int[] candidates, int target) {
+        Arrays.sort(candidates);
+        findCombinationSum2(candidates, 0, target, new ArrayList<>());
+        return res40;
+    }
+
+    private void findCombinationSum2(int[] candidates, int start, int remaining, List<Integer> list) {
+        if (remaining == 0) {
+            res40.add(new ArrayList<>(list));
+            return;
+        }
+        int pre = Integer.MAX_VALUE;
+        for (int i = start; i < candidates.length; i++) {
+            if (i == 0 || candidates[i] != pre) {
+                remaining -= candidates[i];
+                if (remaining < 0) continue;
+                list.add(candidates[i]);
+                findCombinationSum2(candidates, i + 1, remaining, list);
+                list.remove(list.size() - 1);
+                remaining += candidates[i];
+                pre = candidates[i];
+            }
+        }
+    }
+
+    @Test
+    public void run17() {
+        int[] arr = {10, 1, 2, 7, 6, 1, 5};
+        List<List<Integer>> lists = combinationSum2(arr, 8);
+        System.out.println(lists.toString());
+    }
+
+
+    private List<List<Integer>> res216 = new ArrayList<>();
+
+    public List<List<Integer>> combinationSum3(int k, int n) {
+        findCombinationSum3(k, 1, n, new ArrayList<>());
+        return res216;
+    }
+
+    private void findCombinationSum3(int k, int start, int remaining, List<Integer> list) {
+        if (list.size() == k && remaining == 0) {
+            res216.add(new ArrayList<>(list));
+            return;
+        }
+        for (int i = start; i <= 9 - (k - list.size()) + 1; i++) {
+            remaining -= i;
+            if (remaining < 0) continue;
+            list.add(i);
+            findCombinationSum3(k, i + 1, remaining, list);
+            list.remove(list.size() - 1);
+            remaining += i;
+        }
+    }
+
+    @Test
+    public void run18() {
+        List<List<Integer>> lists = combinationSum3(3, 9);
+        System.out.println(lists.toString());
+    }
+
+    private List<List<Integer>> res78 = new ArrayList<>();
+
+    public List<List<Integer>> subsets(int[] nums) {
+        for (int i = 0; i <= nums.length; i++) {
+            findSubsets(nums, i, 0, new ArrayList<>());
+        }
+        return res78;
+    }
+
+    private void findSubsets(int[] nums, int num, int start, List<Integer> list) {
+        if (list.size() == num) {
+            res78.add(new ArrayList<>(list));
+            return;
+        }
+        for (int i = start; i < nums.length - (num - list.size()) + 1; i++) {
+            list.add(nums[i]);
+            findSubsets(nums, num, i + 1, list);
+            list.remove(list.size() - 1);
+        }
+    }
+
+    @Test
+    public void run19() {
+        int[] arr = {1, 2, 3};
+        List<List<Integer>> subsets = subsets(arr);
+        System.out.println(subsets.toString());
+    }
+
+    private List<List<Integer>> res90 = new ArrayList<>();
+
+    public List<List<Integer>> subsetsWithDup(int[] nums) {
+        Arrays.sort(nums);
+        for (int i = 0; i <= nums.length; i++) {
+            findSubsets2(nums, i, 0, new ArrayList<>());
+        }
+        return res90;
+    }
+
+    private void findSubsets2(int[] nums, int num, int start, List<Integer> list) {
+        if (list.size() == num) {
+            res90.add(new ArrayList<>(list));
+            return;
+        }
+        int pre = Integer.MAX_VALUE;
+        for (int i = start; i < nums.length - (num - list.size()) + 1; i++) {
+            if (i == start || nums[i] != pre) {
+                list.add(nums[i]);
+                findSubsets2(nums, num, i + 1, list);
+                list.remove(list.size() - 1);
+                pre = nums[i];
+            }
+        }
+    }
+
+    @Test
+    public void run20() {
+        int[] arr = {1, 2, 2};
+        List<List<Integer>> subsets = subsetsWithDup(arr);
+        System.out.println(subsets.toString());
+        System.out.println(Integer.valueOf("08"));
+    }
+
+    private List<String> res401 = new ArrayList<>();
+    private int[] timeTable = {1, 2, 4, 8, 1, 2, 4, 8, 16, 32};
+    private boolean[] unitMap = {true, true, true, true, false, false, false, false, false, false};
+
+    public List<String> readBinaryWatch(int num) {
+        findCombine4(num, 0, new ArrayList<>());
+        return res401;
+    }
+
+    private void findCombine4(int num, int start, List<Integer> list) {
+        if (list.size() == num) {
+            int hour = 0, minute = 0;
+            for (int i = 0; i < num; i++) {
+                int index = list.get(i);
+                if (unitMap[index]) hour += timeTable[index];
+                else minute += timeTable[index];
+            }
+            if (hour < 12 && minute < 60) {
+                String res = hour + ":";
+                if (minute < 10) res += "0";
+                res += minute;
+                res401.add(res);
+            }
+            return;
+        }
+        for (int i = start; i < 10; i++) {
+            list.add(i);
+            findCombine4(num, i + 1, list);
+            list.remove(list.size() - 1);
+        }
+    }
+
+    @Test
+    public void run21() {
+        List<String> list = readBinaryWatch(2);
+        System.out.println(list.toString());
+    }
+
+    /*79--------------------------------------------------------------*/
+    //在二维平面上上右下左移动的坐标变换
+    private int[][] move = {{-1, 0}, {0, 1}, {1, 0}, {0, -1}};
+    private boolean[][] visited;
+
+    public boolean exist(char[][] board, String word) {
+        int m = board.length;
+        if (m <= 0) return false;
+        int n = board[0].length;
+        visited = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (serachWord(board, word, 0, i, j)) return true;
+            }
+        }
+        return false;
+    }
+
+    private boolean serachWord(char[][] board, String word, int index, int x, int y) {
+        //如果当前搜索到最后一位，返回是否匹配
+        if (index == word.length() - 1) {
+            return board[x][y] == word.charAt(index);
+        }
+        //其他情况需要继续递归搜索,先判断当前位置是否匹配，匹配继续向下搜索，否则直接返回
+        if (board[x][y] == word.charAt(index)) {
+            //记录当前位置
+            visited[x][y] = true;
+            //沿当前位置向上右下左搜索
+            for (int i = 0; i < 4; i++) {
+                int newX = x + move[i][0];
+                int newY = y + move[i][1];
+                //判断新的坐标是否越界，新的坐标是否被访问过了，然后进入新的坐标判断，如果返回true，则函数返回true
+                //如果四个方向都搜索完毕没有true则退出当前节点visited重置。
+                if (newX >= 0 && newX < board.length && newY >= 0 && newY < board[0].length
+                        && !visited[newX][newY]
+                        && serachWord(board, word, index + 1, newX, newY))
+                    return true;
+            }
+            visited[x][y] = false;
+        }
+        return false;
+    }
+
+    @Test
+    public void run22() {
+        char[][] board = {
+                {'A', 'B', 'C', 'E'},
+                {'S', 'F', 'C', 'S'},
+                {'A', 'D', 'E', 'E'}
+        };
+        boolean abcced = exist(board, "SEE");
+        System.out.println(abcced);
+    }
+
+    /*200--------------------------------------------------------------*/
+    private boolean[][] visited200;
+    private int res200;
+
+    public int numIslands(char[][] grid) {
+        int m = grid.length;
+        if (m <= 0) return 0;
+        int n = grid[0].length;
+        visited200 = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (grid[i][j] == '1' && !visited200[i][j]) {
+                    res200++;
+                    floodfill(grid, i, j);
+                }
+            }
+        }
+        return res200;
+    }
+
+    private void floodfill(char[][] grid, int x, int y) {
+        visited200[x][y] = true;
+        for (int i = 0; i < 4; i++) {
+            int newX = x + move[i][0];
+            int newY = y + move[i][1];
+            //递归结束的条件包含在这里面，只有符合这些条件的才向下递归，同时不符合的就递归结束
+            if (newX >= 0 && newX < grid.length && newY >= 0 && newY < grid[0].length
+                    && grid[newX][newY] == '1'
+                    && !visited200[newX][newY]) {
+                floodfill(grid, newX, newY);
+            }
+        }
+    }
+
+    @Test
+    public void run23() {
+        char[][] chars = {
+                {'1', '1', '0', '0', '0'},
+                {'1', '1', '0', '0', '0'},
+                {'0', '0', '1', '0', '0'},
+                {'0', '0', '0', '1', '1'},
+        };
+        System.out.println(numIslands(chars));
+    }
+    /*130------------------------------------------------------------
+     * 先对边界上的O进行洪泛，将其洪泛区域标记为*，然后遍历board，对*标记的修改为O，其他O修改为X
+     * */
+
+    private boolean[][] visited130;
+
+    public void solve(char[][] board) {
+        int m = board.length;
+        if (m <= 0) return;
+        int n = board[0].length;
+        visited130 = new boolean[m][n];
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == 'O' && !visited130[i][j]) {
+                    if (i == 0 || j == 0 || i == m - 1 || j == n - 1) {
+                        dfs(board, i, j);
+                    }
+                }
+            }
+        }
+        for (int i = 0; i < m; i++) {
+            for (int j = 0; j < n; j++) {
+                if (board[i][j] == '*') board[i][j] = 'O';
+                else if (board[i][j] == 'O') board[i][j] = 'X';
+            }
+        }
+    }
+
+    private void dfs(char[][] board, int x, int y) {
+        visited130[x][y] = true;
+        board[x][y] = '*';
+        for (int i = 0; i < 4; i++) {
+            int newX = x + move[i][0];
+            int newY = y + move[i][1];
+            if (newX >= 0 && newX < board.length && newY >= 0 && newY < board[0].length
+                    && board[newX][newY] == 'O'
+                    && !visited130[newX][newY]) {
+                dfs(board, newX, newY);
+            }
+        }
+    }
+
+    @Test
+    public void run24() {
+        char[][] chars = {
+                {'X', 'X', 'X', 'X'},
+                {'X', 'O', 'O', 'X'},
+                {'X', 'O', 'O', 'X'},
+                {'X', 'O', 'X', 'X'},
+        };
+        solve(chars);
+        System.out.println();
+    }
 }
