@@ -1177,4 +1177,136 @@ public class Tree {
         solve(chars);
         System.out.println();
     }
+
+    private List<List<String>> res51 = new ArrayList<>();
+    /*判断列、对角线1，对角线2上是否有皇后
+      对角线1--》i+j,对角线2--》i-j + n - 1
+    */
+    private boolean[] col, dig1, dig2;
+
+    public List<List<String>> solveNQueens(int n) {
+        if (n <= 0) return res51;
+        col = new boolean[n];
+        dig1 = new boolean[2 * n - 1];
+        dig2 = new boolean[2 * n - 1];
+        putQueens(n, 0, new ArrayList<>());
+        return res51;
+    }
+
+    private void putQueens(int n, int x, List<Integer> list) {
+        if (x == n) {
+            List<String> sol = generateResult(list);
+            res51.add(new ArrayList<>(sol));
+        }
+        for (int y = 0; y < n; y++) {
+            if (!col[y] && !dig1[x + y] && !dig2[x - y + n - 1]) {
+                list.add(y);
+                col[y] = true;
+                dig1[x + y] = true;
+                dig2[x - y + n - 1] = true;
+                putQueens(n, x + 1, list);
+                dig2[x - y + n - 1] = false;
+                dig1[x + y] = false;
+                col[y] = false;
+                list.remove(list.size() - 1);
+            }
+        }
+    }
+
+    private List<String> generateResult(List<Integer> list) {
+        List<String> res = new ArrayList<>();
+        int n = list.size();
+        for (int index : list) {
+            StringBuilder sb = new StringBuilder();
+            for (int i = 0; i < n; i++) {
+                if (i == index) sb.append("Q");
+                else sb.append(".");
+            }
+            res.add(sb.toString());
+        }
+        return res;
+    }
+
+    @Test
+    public void run25() {
+        List<List<String>> lists = solveNQueens(4);
+        System.out.println(lists.toString());
+    }
+
+    /**
+     * n皇后问题优化，使用一维数组来存储判断能否放置皇后
+     * 使用给一个n个元素的一维数组Q[N]，每个元素代表在每行上放置皇后的列的位置，直接不存在行冲突
+     * 列冲突可以在放置的时候遍历一维数组来判断是否有相应的列存在Q[i],对角线冲突的两个位置是|x1 - x2| = |y1 - y2|
+     */
+    private int[] Q;
+
+    public List<List<String>> solveNQueens2(int n) {
+        if (n <= 0) return res51;
+        Q = new int[n];
+        for (int i = 0; i < n; i++) {
+            Q[i] = Integer.MIN_VALUE;
+        }
+        putQueens2(n, 0, new ArrayList<>());
+        return res51;
+    }
+
+    private void putQueens2(int n, int x, List<Integer> list) {
+        if (x == n) {
+            List<String> sol = generateResult(list);
+            res51.add(new ArrayList<>(sol));
+        }
+        for (int y = 0; y < n; y++) {
+            if (isValidPos(x, y, n)) {
+                list.add(y);
+                Q[x] = y;
+                putQueens2(n, x + 1, list);
+                Q[x] = Integer.MIN_VALUE;
+                list.remove(list.size() - 1);
+            }
+        }
+    }
+
+    private boolean isValidPos(int x, int y, int n) {
+        for (int i = 0; i < n; i++) {
+            if (Q[i] == y || Math.abs(i - x) == Math.abs(Q[i] - y)) return false;
+        }
+        return true;
+    }
+
+    @Test
+    public void run26() {
+        List<List<String>> lists = solveNQueens2(4);
+        System.out.println(lists.toString());
+    }
+
+    @Test
+    public void run27() {
+        int i = solveQueenByBit(4);
+        System.out.println(sum);
+    }
+
+    private int sum = 0;
+
+    public int solveQueenByBit(int n) {
+        int uplimit = (1 << n) - 1;
+        putQueensByBit(uplimit, 0, 0, 0);
+        return sum;
+    }
+
+    private void putQueensByBit(int uplimit, int row, int ld, int rd) {
+        if (row != uplimit) {
+            int pos = uplimit & ~(row | ld | rd);
+            while (pos != 0) {
+                int p = pos & (~pos + 1);
+
+                pos -= p;
+
+                putQueensByBit(uplimit, row + p, (ld + p) << 1, (rd + p) >> 1);
+            }
+        } else sum++;
+    }
+
+
+
+
 }
