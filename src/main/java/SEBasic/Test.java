@@ -16,6 +16,7 @@ public class Test {
         threadLocal1.set("yihau");
         System.out.println(threadLocal.get());
         System.out.println(threadLocal1.get());
+
         Thread thread = new Thread(new Runnable() {
             @Override
             public void run() {

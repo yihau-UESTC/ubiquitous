@@ -9,8 +9,8 @@ public class ClassLoaderTest {
             @Override
             public Class<?> loadClass(String name) throws ClassNotFoundException {
                 try {
-                    String filename = name.substring(name.lastIndexOf(".") + 1) + ".class";
-                    InputStream is = getClass().getResourceAsStream(filename);
+                    String fileName = name.substring(name.lastIndexOf(".") + 1) + ".class";
+                    InputStream is = getClass().getResourceAsStream(fileName);
                     if (is == null){
                         return super.loadClass(name);
                     }
@@ -18,15 +18,13 @@ public class ClassLoaderTest {
                     is.read(b);
                     return defineClass(name, b, 0, b.length);
                 } catch (IOException e) {
-                    e.printStackTrace();
                     throw new ClassNotFoundException();
                 }
             }
         };
-        Object object = myLoader.loadClass("SEBasic.ClassLoaderTest").newInstance();
-        ClassLoaderTest c1 = (ClassLoaderTest) object;
-        System.out.println(c1.getClass());
-        System.out.println(c1 instanceof SEBasic.ClassLoaderTest);
 
+        Object obj = myLoader.loadClass("SEBasic.ClassLoaderTest").newInstance();
+        System.out.println(obj.getClass());
+        System.out.println(obj instanceof SEBasic.ClassLoaderTest);
     }
 }

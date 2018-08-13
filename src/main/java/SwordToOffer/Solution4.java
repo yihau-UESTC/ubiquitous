@@ -59,4 +59,27 @@ public class Solution4 {
         TreeNode treeNode = reConstructBinaryTree(a1, a2);
         Utils.printTree(treeNode);
     }
+
+    public TreeNode reConstructBinaryTree2(int[] pre, int[] in) {
+        int n = pre.length;
+        if (n <= 0) return null;
+        return init2(pre, in, 0, 0, in.length);
+    }
+
+    private TreeNode init2(int[] pre, int[] in, int ps, int is, int length) {
+        if (length <= 0)
+            return null;
+        if (length == 1)
+            return new TreeNode(pre[ps]);
+        int i = 0;
+        for (i = is; i < is + length; i++) {
+            if (in[i] == pre[ps])
+                break;
+        }
+        TreeNode root = new TreeNode(pre[ps]);
+        int llen = i - is, rlen = length - llen - 1;
+        root.left = init2(pre, in, ps + 1, is, llen);
+        root.right = init2(pre, in, ps + 1 + llen, i + 1, rlen);
+        return root;
+    }
 }

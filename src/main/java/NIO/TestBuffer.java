@@ -2,7 +2,11 @@ package NIO;
 
 import org.junit.Test;
 
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
+import java.nio.channels.FileChannel;
 
 /**
  * @Author: yihau UESTC
@@ -34,6 +38,27 @@ public class TestBuffer {
         System.out.println(buf.get());
         ByteBuffer.allocateDirect(1024);
 
+    }
+
+    @Test
+    public void run() throws IOException {
+        RandomAccessFile file = new RandomAccessFile("E:\\code\\ubiquitous\\resource\\1.txt", "rw");
+        FileChannel channel = file.getChannel();
+        ByteBuffer buf = ByteBuffer.allocate(1024);
+        int read = channel.read(buf);
+        while (read != -1) {
+            System.out.println("read " + read);
+            //翻转模式
+            buf.flip();
+            while (buf.hasRemaining()) {
+                byte[] bytes = new byte[1024];
+                buf.get(bytes, 0, read);
+                System.out.println(new String(bytes));
+            }
+            System.out.println("finish");
+            buf.clear();
+            read = channel.read(buf);
+        }
     }
 
 }

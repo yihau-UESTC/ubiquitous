@@ -1,5 +1,7 @@
 package SwordToOffer;
 
+import org.junit.Test;
+
 import java.util.ArrayList;
 import java.util.Stack;
 
@@ -20,6 +22,7 @@ class ListNode {
  * 3、遍历链表，使用栈存储，然后出栈就是逆序
  * 4、翻转链表，在遍历。
  * 前三个都是常规思路，需要额外的空间，第四中不需要额外空间，使用头插法将链表翻转，这里要掌握头插法的使用，链表中很多需要翻转的情况
+ *
  */
 public class Solution3 {
     public ArrayList<Integer> printListFromTailToHead(ListNode listNode) {
@@ -56,5 +59,34 @@ public class Solution3 {
             cur = cur.next;
         }
         return list;
+    }
+
+    public ArrayList<Integer> printListFromTailToHead3(ListNode listNode) {
+        ArrayList<Integer> list = new ArrayList<>();
+        if (listNode == null) return list;
+        ListNode dummy = new ListNode(-1);
+        while (listNode != null) {
+            ListNode memo = listNode.next;
+            listNode.next = dummy.next;
+            dummy.next = listNode;
+            listNode = memo;
+        }
+        ListNode cur = dummy.next;
+        while (cur != null) {
+            list.add(cur.val);
+            cur = cur.next;
+        }
+        return list;
+    }
+
+    @Test
+    public void run() {
+        ListNode l1 = new ListNode(1);
+        ListNode l2 = new ListNode(2);
+        ListNode l3 = new ListNode(3);
+        l1.next = l2;
+        l2.next = l3;
+        System.out.println(printListFromTailToHead3(l1).toString());
+        ;
     }
 }

@@ -8,7 +8,7 @@ public class TestActor2 extends UntypedActor {
     private ActorRef actorRef;
 
     public TestActor2() {
-        Address address = new Address("akka.tcp", "clientSystem", "192.168.0.109", 8888);
+        Address address = new Address("akka.tcp", "clientSystem", "192.168.1.117", 8888);
         this.actorRef = getContext().actorOf(Props.create(TestActor.class).withDeploy(new Deploy(new RemoteScope(address))));
         System.out.println(actorRef.path().toStringWithoutAddress());
     }
