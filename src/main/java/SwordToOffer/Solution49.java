@@ -62,6 +62,35 @@ public class Solution49 {
 
     @Test
     public void run() {
-        System.out.println(StrToInt("-2147483648"));
+        System.out.println(StrToInt2("214a483648"));
+    }
+
+    public int StrToInt2(String str) {
+        if (str == null || str.equals(" "))
+            return 0;
+        int len = str.length();
+        int s = 0;
+        boolean nagative = false;
+        char c = ' ';
+        int num = 0;
+        if ((c = str.charAt(s)) < '0') {
+            if (c == '-')
+                nagative = true;
+            else if (c != '+')
+                return 0;
+        } else if (c <= '9') {
+            num = num * 10 + c - '0';
+        } else
+            return 0;
+        s++;
+        while (s < len) {
+            c = str.charAt(s);
+            if (c >= '0' && c <= '9')
+                num = num * 10 + c - '0';
+            else
+                return 0;
+            s++;
+        }
+        return nagative ? -num : num;
     }
 }

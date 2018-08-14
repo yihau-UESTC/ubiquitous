@@ -30,5 +30,37 @@ public class Solution44 {
     @Test
     public void run() {
         System.out.println(ReverseSentence(""));
+        System.out.println(ReverseSentence2(""));
+        System.out.println(ReverseSentence2("student. a am i"));
+
+    }
+
+    public String ReverseSentence2(String str) {
+        int n = str.length();
+        char[] chars = str.toCharArray();
+        int l = 0, r = n - 1;
+        while (l < r) {
+            char c = chars[l];
+            chars[l] = chars[r];
+            chars[r] = c;
+            l++;
+            r--;
+        }
+        l = 0;
+        while (l < n) {
+            r = l;
+            while (r < n && chars[r] != ' ')
+                r++;
+            int i1 = l, i2 = r - 1;
+            while (i1 < i2) {
+                char c = chars[i1];
+                chars[i1] = chars[i2];
+                chars[i2] = c;
+                i1++;
+                i2--;
+            }
+            l = r + 1;
+        }
+        return new String(chars);
     }
 }

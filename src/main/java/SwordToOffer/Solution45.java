@@ -38,7 +38,8 @@ public class Solution45 {
 
     @Test
     public void run() {
-        int[] arr = {0, 3, 4, 2, 7};
+        int[] arr = {1, 3, 2, 6, 4};
         System.out.println(isContinuous(arr));
     }
+
 }

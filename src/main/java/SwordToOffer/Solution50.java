@@ -20,8 +20,12 @@ public class Solution50 {
         return false;
     }
 
+    /**
+     * 检查每个数字，将其放在正确的位置，如果发现某个数字的正确位置上的数值和其自身相等，那么说明该数字重复。
+     */
     public boolean duplicate2(int numbers[], int length, int[] duplication) {
         for (int i = 0; i < length; i++) {
+            //这里使用while，每次换过来的数可能还是不在正确位置，需要继续判断
             while (numbers[i] != i) {
                 if (numbers[i] == numbers[numbers[i]]) {
                     duplication[0] = numbers[i];
